@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sticker Store</title>
   <style>
     * { box-sizing: border-box; }
@@ -24,7 +24,6 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.06);
       margin-bottom: 18px;
     }
-    h1, h2 { margin: 0; }
     h1 {
       text-align: center;
       font-size: 28px;
@@ -62,16 +61,6 @@
       background: #fafafa;
       font-size: 14px;
     }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: #999;
-      background: white;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
     .price-box {
       margin-top: 22px;
       background: #111;
@@ -79,7 +68,7 @@
       padding: 18px;
       border-radius: 18px;
       text-align: center;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: bold;
     }
     .small {
@@ -130,54 +119,17 @@
       color: #999;
       line-height: 1.6;
     }
-    .admin { display: none; max-width: 980px; margin: 0 auto; }
-    .admin.active { display: block; }
-    .admin-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .order-card {
-      background: #fafafa;
-      padding: 18px;
-      border-radius: 18px;
-      margin-top: 15px;
-      border: 1px solid #eee;
-    }
-    .order-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: center;
-    }
-    .order-detail {
-      margin-top: 12px;
-      font-size: 13px;
-      line-height: 1.7;
-      word-break: break-all;
-      color: #444;
-    }
-    .status {
-      font-size: 12px;
-      padding: 6px 12px;
-      background: #fff2cc;
-      color: #8a6500;
-      border-radius: 999px;
-      display: inline-block;
-    }
-    .status.done { background: #dff5e1; color: #1d7a35; }
-    .row { display: flex; gap: 10px; margin-top: 12px; }
-    .row button { margin-top: 0; padding: 11px; font-size: 13px; }
-    @media (max-width: 640px) {
-      .grid { grid-template-columns: 1fr; }
-      .card { padding: 22px; }
-    }
   </style>
 </head>
+
 <body>
-  <main class="wrap" id="customerPage">
+  <main class="wrap">
     <section class="card">
       <h1>Sticker Store</h1>
-      <p class="subtitle">รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์ ราคาประหยัด<br>สั่งง่ายผ่านเว็บ ไม่ต้องรอแชท</p>
+      <p class="subtitle">รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์ ราคาประหยัด<br>คำนวณราคาอัตโนมัติ</p>
 
       <div class="notice">
-        วิธีสั่งซื้อ: เลือกประเภท → ใส่จำนวน Coins → วางลิงก์สินค้า → กรอก LINE ID/UID → โอนเงิน → วางลิงก์สลิป → ส่งออเดอร์
+        วิธีสั่งซื้อ: เลือกประเภท → ใส่จำนวน Coins → ระบบคำนวณราคา → โอนเงิน → แนบลิงก์สลิป → ส่งออเดอร์
       </div>
 
       <form id="orderForm">
@@ -188,19 +140,12 @@
           <option value="Emoji">อิโมจิ LINE</option>
         </select>
 
-        <div class="grid">
-          <div>
-            <label>จำนวน Coins ของสินค้า</label>
-            <input type="number" id="coins" min="1" placeholder="เช่น 50, 100, 150" oninput="calculatePrice()" required>
-          </div>
-          <div>
-            <label>ค่าบริการร้าน</label>
-            <select id="serviceFee" onchange="calculatePrice()">
-              <option value="10">+10 บาท</option>
-              <option value="15">+15 บาท</option>
-              <option value="20">+20 บาท</option>
-            </select>
-          </div>
+        <label>จำนวน Coins ของสินค้า</label>
+        <input type="number" id="coins" min="1" placeholder="เช่น 50, 100, 150" oninput="calculatePrice()" required>
+
+        <div class="price-box">
+          ยอดชำระ: <span id="finalPrice">0</span> บาท
+          <span class="small">ราคานี้รวมค่าบริการร้านแล้ว</span>
         </div>
 
         <label>ลิงก์สินค้า LINE STORE</label>
@@ -216,196 +161,125 @@
         <input type="url" id="slipLink" placeholder="อัปโหลดรูปสลิปแล้ววางลิงก์" required>
 
         <label>หมายเหตุเพิ่มเติม</label>
-        <textarea id="note" rows="3" placeholder="เช่น ส่งเป็นของขวัญ / รีบใช้ / รายละเอียดอื่น ๆ"></textarea>
+        <textarea id="note" rows="3" placeholder="เช่น ส่งเป็นของขวัญ / รีบใช้"></textarea>
 
-        <div class="price-box">
-          ยอดชำระ: <span id="finalPrice">0</span> บาท
-          <span class="small">คำนวณจาก Coins × เรทร้าน + ค่าบริการ</span>
-        </div>
-
-        <button type="submit">ส่งออเดอร์</button>
+        <button type="submit" id="submitBtn">ส่งออเดอร์</button>
       </form>
     </section>
 
     <section class="card">
       <h2>ชำระเงิน</h2>
+
       <div class="qr-box">
         <img src="https://placehold.co/300x300?text=PromptPay+QR" alt="PromptPay QR">
-        <p style="font-size:13px;color:#777;margin-bottom:0;line-height:1.6;">
-          ใส่รูป QR พร้อมเพย์ของร้านแทนรูปนี้ในโค้ด
-        </p>
       </div>
 
       <label>พร้อมเพย์ / เลขบัญชีร้าน</label>
       <input value="ใส่เบอร์พร้อมเพย์หรือเลขบัญชีร้านตรงนี้" readonly>
 
-      <a class="btn btn-light" href="https://line.me/R/ti/p/@YOUR_LINE_OA" target="_blank">ติดต่อร้านผ่าน LINE OA</a>
+      <a class="btn btn-light" href="https://line.me/R/ti/p/@YOUR_LINE_OA" target="_blank">
+        ติดต่อร้านผ่าน LINE OA
+      </a>
+
       <div class="footer">หลังชำระเงิน ร้านจะดำเนินการภายใน 5-15 นาที</div>
     </section>
   </main>
 
-  <main class="admin" id="adminPage">
-    <section class="card">
-      <h1>หลังบ้านร้าน</h1>
-      <p class="subtitle">หน้านี้เปิดได้เฉพาะเมื่อใส่ <b>?admin=1</b> ต่อท้ายลิงก์เว็บ</p>
-
-      <div class="notice">
-        หมายเหตุ: เวอร์ชันทดลองนี้เก็บออเดอร์ในเบราว์เซอร์เดียวกันด้วย localStorage ถ้าต้องการหลังบ้านจริงข้ามเครื่อง ต้องเชื่อม Google Sheet / Firebase เพิ่ม
-      </div>
-
-      <div class="row">
-        <button class="btn-light" onclick="exportOrders()">ดาวน์โหลด CSV</button>
-        <button class="btn-light" onclick="clearOrders()">ล้างออเดอร์</button>
-      </div>
-      <div id="orders"></div>
-    </section>
-  </main>
-
   <script>
-    const COIN_RATE = 0.47; // แพ็ก 500(+100) ประมาณ 0.47 บาท/coin เปลี่ยนได้ตามต้นทุนจริง
+    const API_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
 
-    const customerPage = document.getElementById('customerPage');
-    const adminPage = document.getElementById('adminPage');
+    const PRICE_TABLE = {
+      Sticker: {
+        50: 35,
+        100: 59,
+        150: 79,
+        200: 99
+      },
+      Theme: {
+        50: 39,
+        100: 69,
+        150: 89,
+        200: 109
+      },
+      Emoji: {
+        50: 35,
+        100: 59,
+        150: 79,
+        200: 99
+      }
+    };
 
-    if (new URLSearchParams(window.location.search).get('admin') === '1') {
-      customerPage.style.display = 'none';
-      adminPage.classList.add('active');
-    }
+    const FALLBACK_RATE = 0.47;
+    const FALLBACK_SERVICE_FEE = 10;
 
     function calculatePrice() {
+      const productType = document.getElementById('productType').value;
       const coins = Number(document.getElementById('coins').value || 0);
-      const fee = Number(document.getElementById('serviceFee').value || 0);
-      const price = coins > 0 ? Math.ceil((coins * COIN_RATE) + fee) : 0;
+
+      let price = 0;
+
+      if (coins > 0) {
+        if (PRICE_TABLE[productType] && PRICE_TABLE[productType][coins]) {
+          price = PRICE_TABLE[productType][coins];
+        } else {
+          price = Math.ceil((coins * FALLBACK_RATE) + FALLBACK_SERVICE_FEE);
+        }
+      }
+
       document.getElementById('finalPrice').innerText = price;
       return price;
     }
 
-    function getOrders() {
-      return JSON.parse(localStorage.getItem('orders')) || [];
-    }
-
-    function saveOrders(orders) {
-      localStorage.setItem('orders', JSON.stringify(orders));
-    }
-
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
+    document.getElementById('orderForm').addEventListener('submit', async function(e) {
       e.preventDefault();
 
-      const finalPrice = calculatePrice();
-      const orderId = 'ORD' + Date.now().toString().slice(-6);
+      const price = calculatePrice();
+
+      if (!price || price <= 0) {
+        alert('กรุณาใส่จำนวน Coins ให้ถูกต้อง');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'กำลังส่งออเดอร์...';
 
       const order = {
-        id: orderId,
+        action: 'createOrder',
         productType: document.getElementById('productType').value,
         coins: document.getElementById('coins').value,
-        serviceFee: document.getElementById('serviceFee').value,
-        price: finalPrice,
+        price: price,
         productLink: document.getElementById('productLink').value,
         lineId: document.getElementById('lineId').value,
         payerName: document.getElementById('payerName').value,
         slipLink: document.getElementById('slipLink').value,
-        note: document.getElementById('note').value,
-        status: 'รอดำเนินการ',
-        time: new Date().toLocaleString('th-TH')
+        note: document.getElementById('note').value
       };
 
-      const orders = getOrders();
-      orders.unshift(order);
-      saveOrders(orders);
-      renderOrders();
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify(order)
+        });
 
-      alert('ส่งออเดอร์เรียบร้อย เลขออเดอร์: ' + orderId);
-      this.reset();
-      calculatePrice();
+        const result = await res.json();
+
+        if (result.success) {
+          alert('ส่งออเดอร์เรียบร้อย เลขออเดอร์: ' + result.orderId);
+          this.reset();
+          calculatePrice();
+        } else {
+          alert('ส่งออเดอร์ไม่สำเร็จ กรุณาลองใหม่');
+        }
+      } catch (error) {
+        alert('เกิดข้อผิดพลาด กรุณาติดต่อร้านผ่าน LINE OA');
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerText = 'ส่งออเดอร์';
     });
 
-    function renderOrders() {
-      const ordersDiv = document.getElementById('orders');
-      if (!ordersDiv) return;
-
-      const orders = getOrders();
-      if (orders.length === 0) {
-        ordersDiv.innerHTML = '<p style="text-align:center;color:#999;">ยังไม่มีออเดอร์</p>';
-        return;
-      }
-
-      ordersDiv.innerHTML = orders.map((order, index) => {
-        const done = order.status === 'ส่งสำเร็จ';
-        return `
-          <div class="order-card">
-            <div class="order-top">
-              <div>
-                <strong>${order.id}</strong><br>
-                <span style="font-size:13px;color:#777;">${order.productType} • ${order.coins} Coins</span>
-              </div>
-              <strong>${order.price}฿</strong>
-            </div>
-            <div class="order-detail">
-              <b>LINE ID / UID:</b> ${order.lineId}<br>
-              <b>ชื่อผู้โอน:</b> ${order.payerName}<br>
-              <b>สินค้า:</b> <a href="${order.productLink}" target="_blank">เปิดลิงก์</a><br>
-              <b>สลิป:</b> <a href="${order.slipLink}" target="_blank">ดูสลิป</a><br>
-              <b>หมายเหตุ:</b> ${order.note || '-'}<br>
-              <b>เวลา:</b> ${order.time}
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;">
-              <span class="status ${done ? 'done' : ''}">${order.status}</span>
-              <div class="row" style="margin-top:0;">
-                <button onclick="copyOrder(${index})" class="btn-light">คัดลอก</button>
-                <button onclick="completeOrder(${index})">ส่งแล้ว</button>
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function completeOrder(index) {
-      const orders = getOrders();
-      orders[index].status = 'ส่งสำเร็จ';
-      saveOrders(orders);
-      renderOrders();
-    }
-
-    function copyOrder(index) {
-      const order = getOrders()[index];
-      const text = `ออเดอร์ ${order.id}
-ประเภท: ${order.productType}
-Coins: ${order.coins}
-ราคา: ${order.price} บาท
-LINE ID/UID: ${order.lineId}
-ลิงก์สินค้า: ${order.productLink}
-สลิป: ${order.slipLink}
-หมายเหตุ: ${order.note || '-'}`;
-      navigator.clipboard.writeText(text);
-      alert('คัดลอกออเดอร์แล้ว');
-    }
-
-    function clearOrders() {
-      if (confirm('ต้องการล้างออเดอร์ทั้งหมดใช่ไหม?')) {
-        localStorage.removeItem('orders');
-        renderOrders();
-      }
-    }
-
-    function exportOrders() {
-      const orders = getOrders();
-      if (orders.length === 0) return alert('ยังไม่มีออเดอร์');
-      const headers = ['Order ID','Type','Coins','Price','LINE ID/UID','Payer','Product Link','Slip','Note','Status','Time'];
-      const rows = orders.map(o => [o.id,o.productType,o.coins,o.price,o.lineId,o.payerName,o.productLink,o.slipLink,o.note,o.status,o.time]);
-      const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell || '').replaceAll('"','""')}"`).join(',')).join('
-');
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'orders.csv';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
     calculatePrice();
-    renderOrders();
   </script>
 </body>
 </html>
