@@ -1,130 +1,348 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sticker Store</title>
+
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f7f7f7; color: #222; padding: 20px; }
-    .wrap { max-width: 560px; margin: 0 auto; }
-    .card { background: white; border-radius: 24px; padding: 26px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); margin-bottom: 18px; }
-    h1 { text-align: center; font-size: 28px; margin-bottom: 8px; }
-    .subtitle { text-align: center; color: #777; font-size: 14px; line-height: 1.6; margin-bottom: 22px; }
-    .notice { background: #f8f8f8; border: 1px solid #eee; border-radius: 16px; padding: 14px; font-size: 13px; line-height: 1.7; color: #555; margin-bottom: 18px; }
-    label { display: block; margin-top: 16px; margin-bottom: 8px; font-size: 14px; font-weight: 700; }
-    input, select, textarea { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #ddd; background: #fafafa; font-size: 14px; }
-    .price-box { margin-top: 22px; background: #111; color: white; padding: 18px; border-radius: 18px; text-align: center; font-size: 22px; font-weight: bold; }
-    .small { display: block; font-size: 12px; color: #aaa; margin-top: 6px; font-weight: normal; }
-    button, .btn { width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 16px; background: #111; color: white; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; }
-    .btn-light { background: #f1f1f1; color: #111; }
-    .qr-box { text-align: center; border: 1px dashed #ddd; border-radius: 18px; padding: 16px; margin-top: 14px; background: #fafafa; }
-    .qr-box img { width: 190px; max-width: 100%; border-radius: 12px; background: white; padding: 8px; }
-    .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #999; line-height: 1.6; }
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      margin:0;
+      background:#f6f6f6;
+      font-family:Arial,sans-serif;
+      color:#111;
+      padding:20px;
+    }
+
+    .container{
+      max-width:560px;
+      margin:auto;
+    }
+
+    .card{
+      background:#fff;
+      border-radius:28px;
+      padding:24px;
+      margin-bottom:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,.05);
+    }
+
+    h1{
+      margin:0;
+      text-align:center;
+      font-size:30px;
+    }
+
+    .subtitle{
+      text-align:center;
+      color:#777;
+      margin-top:8px;
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .notice{
+      margin-top:20px;
+      background:#fafafa;
+      border:1px solid #eee;
+      border-radius:18px;
+      padding:14px;
+      font-size:13px;
+      line-height:1.7;
+      color:#666;
+    }
+
+    label{
+      display:block;
+      margin-top:18px;
+      margin-bottom:8px;
+      font-size:14px;
+      font-weight:700;
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      padding:15px;
+      border-radius:16px;
+      border:1px solid #ddd;
+      background:#fafafa;
+      font-size:14px;
+    }
+
+    textarea{
+      resize:none;
+    }
+
+    .price-box{
+      margin-top:22px;
+      background:#111;
+      color:#fff;
+      border-radius:22px;
+      padding:22px;
+      text-align:center;
+    }
+
+    .price{
+      font-size:42px;
+      font-weight:bold;
+    }
+
+    .price-text{
+      margin-top:4px;
+      color:#aaa;
+      font-size:13px;
+    }
+
+    button{
+      width:100%;
+      margin-top:22px;
+      padding:16px;
+      border:none;
+      border-radius:18px;
+      background:#111;
+      color:#fff;
+      font-size:15px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .payment{
+      text-align:center;
+    }
+
+    .payment img{
+      width:220px;
+      max-width:100%;
+      border-radius:16px;
+      border:1px dashed #ddd;
+      padding:10px;
+      background:#fff;
+    }
+
+    .footer{
+      text-align:center;
+      margin-top:18px;
+      color:#888;
+      font-size:12px;
+      line-height:1.7;
+    }
   </style>
 </head>
 
 <body>
-  <main class="wrap">
-    <section class="card">
-      <h1>Sticker Store</h1>
-      <p class="subtitle">รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์ ราคาประหยัด</p>
 
-      <div class="notice">
-        วิธีสั่งซื้อ: กรอกข้อมูล → ระบบคำนวณราคา → กดส่งออเดอร์ → ส่งสลิปใน LINE
-      </div>
+<div class="container">
 
-      <form id="orderForm">
-        <label>ประเภทสินค้า</label>
-        <select id="productType" onchange="calculatePrice()">
-          <option value="Sticker">สติ๊กเกอร์ LINE</option>
-          <option value="Theme">ธีม LINE</option>
-          <option value="Emoji">อิโมจิ LINE</option>
-        </select>
+  <div class="card">
+    <h1>Sticker Store</h1>
 
-        <label>จำนวน Coins</label>
-        <input type="number" id="coins" min="1" placeholder="เช่น 50, 100, 150" oninput="calculatePrice()" required>
+    <div class="subtitle">
+      รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์<br>
+      ราคาประหยัด ส่งไว
+    </div>
 
-        <div class="price-box">
-          ยอดชำระ: <span id="finalPrice">0</span> บาท
-          <span class="small">ราคานี้รวมค่าบริการร้านแล้ว</span>
+    <div class="notice">
+      วิธีสั่งซื้อ:<br>
+      1. กรอกข้อมูลสินค้า<br>
+      2. ระบบคำนวณราคาอัตโนมัติ<br>
+      3. กดส่งออเดอร์<br>
+      4. ส่งสลิปใน LINE OA
+    </div>
+
+    <form id="orderForm">
+
+      <label>ประเภทสินค้า</label>
+      <select id="productType" onchange="calculatePrice()">
+        <option value="Sticker">สติ๊กเกอร์ LINE</option>
+        <option value="Theme">ธีม LINE</option>
+        <option value="Emoji">อิโมจิ LINE</option>
+      </select>
+
+      <label>จำนวน Coins</label>
+      <input
+        type="number"
+        id="coins"
+        placeholder="เช่น 50 / 100 / 150"
+        oninput="calculatePrice()"
+        required
+      >
+
+      <div class="price-box">
+        <div class="price">
+          <span id="finalPrice">0</span> บาท
         </div>
 
-        <label>ลิงก์สินค้า LINE STORE</label>
-        <input type="url" id="productLink" placeholder="วางลิงก์สติ๊กเกอร์ / ธีม" required>
-
-        <label>LINE ID / UID ลูกค้า</label>
-        <input type="text" id="lineId" placeholder="เช่น @lineid หรือ UID" required>
-
-        <label>ชื่อผู้โอน</label>
-        <input type="text" id="payerName" placeholder="ชื่อบนสลิปโอนเงิน" required>
-
-        <label>หมายเหตุเพิ่มเติม</label>
-        <textarea id="note" rows="3" placeholder="เช่น ส่งเป็นของขวัญ / รีบใช้"></textarea>
-
-        <button type="submit">ส่งออเดอร์ผ่าน LINE</button>
-      </form>
-    </section>
-
-    <section class="card">
-      <h2>ชำระเงิน</h2>
-
-      <div class="qr-box">
-        <img src="https://placehold.co/300x300?text=PromptPay+QR" alt="PromptPay QR">
+        <div class="price-text">
+          ราคานี้รวมค่าบริการร้านแล้ว
+        </div>
       </div>
 
-      <label>พร้อมเพย์ / เลขบัญชีร้าน</label>
-      <input value="ใส่เบอร์พร้อมเพย์หรือเลขบัญชีร้านตรงนี้" readonly>
+      <label>ลิงก์สินค้า LINE STORE</label>
+      <input
+        type="url"
+        id="productLink"
+        placeholder="วางลิงก์สินค้า"
+        required
+      >
 
-      <div class="footer">หลังส่งออเดอร์ กรุณาส่งสลิปใน LINE ร้าน</div>
-    </section>
-  </main>
+      <label>LINE ID / UID ลูกค้า</label>
+      <input
+        type="text"
+        id="lineId"
+        placeholder="เช่น @lineid"
+        required
+      >
 
-  <script>
-    const LINE_URL = 'https://line.me/R/oaMessage/@674pbwid';
+      <label>ชื่อผู้โอน</label>
+      <input
+        type="text"
+        id="payerName"
+        placeholder="ชื่อบนสลิป"
+        required
+      >
 
-    const PRICE_TABLE = {
-      Sticker: { 50: 35, 100: 59, 150: 79, 200: 99 },
-      Theme: { 50: 39, 100: 69, 150: 89, 200: 109 },
-      Emoji: { 50: 35, 100: 59, 150: 79, 200: 99 }
-    };
+      <label>หมายเหตุเพิ่มเติม</label>
+      <textarea
+        id="note"
+        rows="4"
+        placeholder="เช่น ส่งเป็นของขวัญ / รีบใช้"
+      ></textarea>
 
-    const FALLBACK_RATE = 0.47;
-    const FALLBACK_SERVICE_FEE = 10;
+      <button type="submit">
+        ส่งออเดอร์ผ่าน LINE
+      </button>
 
-    function calculatePrice() {
-      const productType = document.getElementById('productType').value;
-      const coins = Number(document.getElementById('coins').value || 0);
-      let price = 0;
+    </form>
+  </div>
 
-      if (coins > 0) {
-        if (PRICE_TABLE[productType] && PRICE_TABLE[productType][coins]) {
-          price = PRICE_TABLE[productType][coins];
-        } else {
-          price = Math.ceil((coins * FALLBACK_RATE) + FALLBACK_SERVICE_FEE);
-        }
-      }
+  <div class="card payment">
 
-      document.getElementById('finalPrice').innerText = price;
-      return price;
+    <h2>ชำระเงิน</h2>
+
+    <img
+      src="https://placehold.co/300x300?text=PromptPay+QR"
+      alt="QR"
+    >
+
+    <div class="footer">
+      หลังกดส่งออเดอร์ ระบบจะเปิด LINE ให้อัตโนมัติ<br>
+      จากนั้นส่งสลิปในแชทได้เลย
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const PRICE_TABLE = {
+  Sticker: {
+    50: 35,
+    100: 59,
+    150: 79,
+    200: 99
+  },
+
+  Theme: {
+    50: 39,
+    100: 69,
+    150: 89,
+    200: 109
+  },
+
+  Emoji: {
+    50: 35,
+    100: 59,
+    150: 79,
+    200: 99
+  }
+};
+
+const FALLBACK_RATE = 0.47;
+const SERVICE_FEE = 10;
+
+function calculatePrice(){
+
+  const productType =
+    document.getElementById("productType").value;
+
+  const coins =
+    Number(document.getElementById("coins").value || 0);
+
+  let price = 0;
+
+  if(coins > 0){
+
+    if(
+      PRICE_TABLE[productType] &&
+      PRICE_TABLE[productType][coins]
+    ){
+
+      price =
+        PRICE_TABLE[productType][coins];
+
+    }else{
+
+      price =
+        Math.ceil(
+          (coins * FALLBACK_RATE)
+          + SERVICE_FEE
+        );
+
     }
 
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+  }
 
-      const productType = document.getElementById('productType').value;
-      const coins = document.getElementById('coins').value;
-      const price = calculatePrice();
-      const productLink = document.getElementById('productLink').value;
-      const lineId = document.getElementById('lineId').value;
-      const payerName = document.getElementById('payerName').value;
-      const note = document.getElementById('note').value || '-';
+  document.getElementById("finalPrice")
+    .innerText = price;
 
-      const message =
+  return price;
+}
+
+document
+  .getElementById("orderForm")
+  .addEventListener("submit",function(e){
+
+    e.preventDefault();
+
+    const productType =
+      document.getElementById("productType").value;
+
+    const coins =
+      document.getElementById("coins").value;
+
+    const price =
+      calculatePrice();
+
+    const productLink =
+      document.getElementById("productLink").value;
+
+    const lineId =
+      document.getElementById("lineId").value;
+
+    const payerName =
+      document.getElementById("payerName").value;
+
+    const note =
+      document.getElementById("note").value || "-";
+
+    const message =
 `สั่งซื้อสติ๊กเกอร์ไลน์
-ประเภทสินค้า: ${productType}
-จำนวน Coins: ${coins}
-ยอดชำระ: ${price} บาท
+
+ประเภทสินค้า:
+${productType}
+
+จำนวน Coins:
+${coins}
+
+ยอดชำระ:
+${price} บาท
 
 ลิงก์สินค้า:
 ${productLink}
@@ -138,15 +356,20 @@ ${payerName}
 หมายเหตุ:
 ${note}
 
-เดี๋ยวส่งสลิปให้ในแชทนี้ค่ะ`;
+เดี๋ยวส่งสลิปในแชทนี้ค่ะ`;
 
-      const encodedMessage = encodeURIComponent(message);
+    const encodedMessage =
+      encodeURIComponent(message);
 
-window.open(`https://line.me/R/msg/text/?${encodedMessage}`);
-    
-    });
+    window.open(
+      `https://line.me/R/msg/text/?${encodedMessage}`
+    );
 
-    calculatePrice();
-  </script>
+});
+
+calculatePrice();
+
+</script>
+
 </body>
 </html>
