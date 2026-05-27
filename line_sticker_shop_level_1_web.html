@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Destiny Sticker Store</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 28px;
+      color: #111;
+    }
+
+    p {
+      text-align: center;
+      color: #777;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #ddd;
+      background: #fafafa;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #999;
+      background: white;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 15px;
+      border: none;
+      border-radius: 16px;
+      background: #111;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .price-box {
+      margin-top: 22px;
+      background: #f7f7f7;
+      padding: 18px;
+      border-radius: 16px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 12px;
+      color: #999;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Destiny Sticker Store</h1>
+    <p>ร้านรับกดสติ๊กเกอร์ไลน์ราคาถูก ส่งไว</p>
+
+    <form>
+      <label>เลือกประเภทสินค้า</label>
+      <select id="type" onchange="updatePrice()">
+        <option value="35">Sticker 50 Coins - 35฿</option>
+        <option value="59">Sticker 100 Coins - 59฿</option>
+        <option value="89">LINE Theme - 89฿</option>
+      </select>
+
+      <label>ลิงก์สติ๊กเกอร์ / ธีม</label>
+      <input type="text" placeholder="วางลิงก์ LINE STORE" />
+
+      <label>UID หรือชื่อ LINE ลูกค้า</label>
+      <input type="text" placeholder="กรอก UID หรือ @line" />
+
+      <label>แนบสลิป (ใส่ลิงก์รูปภาพ)</label>
+      <input type="text" placeholder="ลิงก์สลิป" />
+
+      <div class="price-box">
+        ราคาทั้งหมด: <span id="price">35</span> บาท
+      </div>
+
+      <button type="submit">ส่งออเดอร์</button>
+    </form>
+
+    <div class="footer">
+      หลังชำระเงิน ร้านจะดำเนินการภายใน 5-15 นาที
+    </div>
+  </div>
+
+  <script>
+    function updatePrice() {
+      const price = document.getElementById('type').value;
+      document.getElementById('price').innerText = price;
+    }
+  </script>
+</body>
+</html>
