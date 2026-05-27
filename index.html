@@ -140,8 +140,8 @@ ${note}
 
 เดี๋ยวส่งสลิปให้ในแชทนี้ค่ะ`;
 
-      const encodedMessage = encodeURIComponent(message);
-      window.location.href = `${LINE_URL}/?${encodedMessage}`;
+      window.open(`https://line.me/R/msg/text/?${encodedMessage}`);
+    
     });
 
     calculatePrice();
