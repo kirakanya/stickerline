@@ -81,7 +81,7 @@
   </main>
 
   <script>
-    const LINE_URL = 'https://line.me/R/ti/p/@674pbwid';
+    const LINE_URL = 'https://line.me/R/oaMessage/@674pbwid';
 
     const PRICE_TABLE = {
       Sticker: { 50: 35, 100: 59, 150: 79, 200: 99 },
@@ -141,7 +141,7 @@ ${note}
 เดี๋ยวส่งสลิปให้ในแชทนี้ค่ะ`;
 
       const encodedMessage = encodeURIComponent(message);
-      window.location.href = `${LINE_URL}?text=${encodedMessage}`;
+      window.location.href = `${LINE_URL}/?${encodedMessage}`;
     });
 
     calculatePrice();
