@@ -16,7 +16,7 @@
     input, select, textarea { width: 100%; padding: 14px; border-radius: 14px; border: 1px solid #ddd; background: #fafafa; font-size: 14px; }
     .price-box { margin-top: 22px; background: #111; color: white; padding: 18px; border-radius: 18px; text-align: center; font-size: 22px; font-weight: bold; }
     .small { display: block; font-size: 12px; color: #aaa; margin-top: 6px; font-weight: normal; }
-    button, .btn { display: inline-block; width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 16px; background: #111; color: white; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
+    button, .btn { width: 100%; margin-top: 20px; padding: 15px; border: none; border-radius: 16px; background: #111; color: white; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; }
     .btn-light { background: #f1f1f1; color: #111; }
     .qr-box { text-align: center; border: 1px dashed #ddd; border-radius: 18px; padding: 16px; margin-top: 14px; background: #fafafa; }
     .qr-box img { width: 190px; max-width: 100%; border-radius: 12px; background: white; padding: 8px; }
@@ -28,10 +28,10 @@
   <main class="wrap">
     <section class="card">
       <h1>Sticker Store</h1>
-      <p class="subtitle">รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์ ราคาประหยัด<br>คำนวณราคาอัตโนมัติ</p>
+      <p class="subtitle">รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์ ราคาประหยัด</p>
 
       <div class="notice">
-        วิธีสั่งซื้อ: เลือกประเภท → ใส่จำนวน Coins → โอนเงิน → แนบรูปสลิป → ส่งออเดอร์
+        วิธีสั่งซื้อ: กรอกข้อมูล → ระบบคำนวณราคา → กดส่งออเดอร์ → ส่งสลิปใน LINE
       </div>
 
       <form id="orderForm">
@@ -42,7 +42,7 @@
           <option value="Emoji">อิโมจิ LINE</option>
         </select>
 
-        <label>จำนวน Coins ของสินค้า</label>
+        <label>จำนวน Coins</label>
         <input type="number" id="coins" min="1" placeholder="เช่น 50, 100, 150" oninput="calculatePrice()" required>
 
         <div class="price-box">
@@ -59,13 +59,10 @@
         <label>ชื่อผู้โอน</label>
         <input type="text" id="payerName" placeholder="ชื่อบนสลิปโอนเงิน" required>
 
-        <label>แนบรูปสลิป</label>
-        <input type="file" id="slipImage" accept="image/*" required>
-
         <label>หมายเหตุเพิ่มเติม</label>
         <textarea id="note" rows="3" placeholder="เช่น ส่งเป็นของขวัญ / รีบใช้"></textarea>
 
-        <button type="submit" id="submitBtn">ส่งออเดอร์</button>
+        <button type="submit">ส่งออเดอร์ผ่าน LINE</button>
       </form>
     </section>
 
@@ -79,16 +76,12 @@
       <label>พร้อมเพย์ / เลขบัญชีร้าน</label>
       <input value="ใส่เบอร์พร้อมเพย์หรือเลขบัญชีร้านตรงนี้" readonly>
 
-      <a class="btn btn-light" href="https://line.me/R/ti/p/@YOUR_LINE_OA" target="_blank">
-        ติดต่อร้านผ่าน LINE OA
-      </a>
-
-      <div class="footer">หลังชำระเงิน ร้านจะดำเนินการภายใน 5-15 นาที</div>
+      <div class="footer">หลังส่งออเดอร์ กรุณาส่งสลิปใน LINE ร้าน</div>
     </section>
   </main>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzDmO_DuQzWcN7ZUE_HBN6z4m_Km8qq_7K0lX5DY3ezuIoXE3ICf-dqB-07Zjv9ysW3/exec';
+    const LINE_URL = 'https://line.me/R/ti/p/@674pbwid';
 
     const PRICE_TABLE = {
       Sticker: { 50: 35, 100: 59, 150: 79, 200: 99 },
@@ -116,84 +109,39 @@
       return price;
     }
 
-    function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-      img.onload = function() {
-        const canvas = document.createElement('canvas');
-        const maxWidth = 900;
-        const scale = maxWidth / img.width;
-
-        canvas.width = maxWidth;
-        canvas.height = img.height * scale;
-
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-        resolve(canvas.toDataURL('image/jpeg', 0.7));
-      };
-
-      img.src = e.target.result;
-    };
-
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-    document.getElementById('orderForm').addEventListener('submit', async function(e) {
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
+      const productType = document.getElementById('productType').value;
+      const coins = document.getElementById('coins').value;
       const price = calculatePrice();
-      const file = document.getElementById('slipImage').files[0];
+      const productLink = document.getElementById('productLink').value;
+      const lineId = document.getElementById('lineId').value;
+      const payerName = document.getElementById('payerName').value;
+      const note = document.getElementById('note').value || '-';
 
-      if (!file) {
-        alert('กรุณาแนบรูปสลิป');
-        return;
-      }
+      const message =
+`สั่งซื้อสติ๊กเกอร์ไลน์
+ประเภทสินค้า: ${productType}
+จำนวน Coins: ${coins}
+ยอดชำระ: ${price} บาท
 
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = 'กำลังส่งออเดอร์...';
+ลิงก์สินค้า:
+${productLink}
 
-      try {
-        const slipBase64 = await fileToBase64(file);
+LINE ID / UID:
+${lineId}
 
-        const order = {
-          action: 'createOrder',
-          productType: document.getElementById('productType').value,
-          coins: document.getElementById('coins').value,
-          price: price,
-          productLink: document.getElementById('productLink').value,
-          lineId: document.getElementById('lineId').value,
-          payerName: document.getElementById('payerName').value,
-          slipImage: slipBase64,
-          note: document.getElementById('note').value
-        };
+ชื่อผู้โอน:
+${payerName}
 
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify(order)
-        });
+หมายเหตุ:
+${note}
 
-        const result = await res.json();
+เดี๋ยวส่งสลิปให้ในแชทนี้ค่ะ`;
 
-        if (result.success) {
-          alert('ส่งออเดอร์เรียบร้อย เลขออเดอร์: ' + result.orderId);
-          this.reset();
-          calculatePrice();
-        } else {
-          alert('ส่งออเดอร์ไม่สำเร็จ กรุณาลองใหม่');
-        }
-      } catch (error) {
-        alert('เกิดข้อผิดพลาด กรุณาติดต่อร้านผ่าน LINE OA');
-      }
-
-      submitBtn.disabled = false;
-      submitBtn.innerText = 'ส่งออเดอร์';
+      const encodedMessage = encodeURIComponent(message);
+      window.location.href = `${LINE_URL}?text=${encodedMessage}`;
     });
 
     calculatePrice();
