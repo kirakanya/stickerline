@@ -140,7 +140,9 @@ ${note}
 
 เดี๋ยวส่งสลิปให้ในแชทนี้ค่ะ`;
 
-      window.open(`https://line.me/R/msg/text/?${encodedMessage}`);
+      const encodedMessage = encodeURIComponent(message);
+
+window.open(`https://line.me/R/msg/text/?${encodedMessage}`);
     
     });
 
