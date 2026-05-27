@@ -106,7 +106,7 @@
     <h1>Destiny Sticker Store</h1>
     <p>ร้านรับกดสติ๊กเกอร์ไลน์ราคาถูก ส่งไว</p>
 
-    <form>
+    <form id="orderForm">
       <label>เลือกประเภทสินค้า</label>
       <select id="type" onchange="updatePrice()">
         <option value="35">Sticker 50 Coins - 35฿</option>
@@ -115,13 +115,13 @@
       </select>
 
       <label>ลิงก์สติ๊กเกอร์ / ธีม</label>
-      <input type="text" placeholder="วางลิงก์ LINE STORE" />
+      <input type="text" id="link" placeholder="วางลิงก์ LINE STORE" required />
 
       <label>UID หรือชื่อ LINE ลูกค้า</label>
-      <input type="text" placeholder="กรอก UID หรือ @line" />
+      <input type="text" id="uid" placeholder="กรอก UID หรือ @line" required />
 
-      <label>แนบสลิป (ใส่ลิงก์รูปภาพ)</label>
-      <input type="text" placeholder="ลิงก์สลิป" />
+      <label>ลิงก์สลิป</label>
+      <input type="text" id="slip" placeholder="แนบลิงก์สลิป" required />
 
       <div class="price-box">
         ราคาทั้งหมด: <span id="price">35</span> บาท
@@ -133,6 +133,12 @@
     <div class="footer">
       หลังชำระเงิน ร้านจะดำเนินการภายใน 5-15 นาที
     </div>
+
+    <hr style="margin:30px 0;border:none;border-top:1px solid #eee;">
+
+    <h2 style="font-size:22px;">📦 ระบบดูออเดอร์</h2>
+
+    <div id="orders"></div>
   </div>
 
   <script>
@@ -140,6 +146,82 @@
       const price = document.getElementById('type').value;
       document.getElementById('price').innerText = price;
     }
+
+    const form = document.getElementById('orderForm');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const order = {
+        type: document.getElementById('type').options[document.getElementById('type').selectedIndex].text,
+        price: document.getElementById('price').innerText,
+        link: document.getElementById('link').value,
+        uid: document.getElementById('uid').value,
+        slip: document.getElementById('slip').value,
+        status: 'รอดำเนินการ',
+        time: new Date().toLocaleString()
+      };
+
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders.unshift(order);
+      localStorage.setItem('orders', JSON.stringify(orders));
+
+      renderOrders();
+      form.reset();
+      updatePrice();
+
+      alert('ส่งออเดอร์เรียบร้อย');
+    });
+
+    function renderOrders() {
+      const ordersDiv = document.getElementById('orders');
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+      if (orders.length === 0) {
+        ordersDiv.innerHTML = '<p style="text-align:center;color:#999;">ยังไม่มีออเดอร์</p>';
+        return;
+      }
+
+      ordersDiv.innerHTML = '';
+
+      orders.forEach((order, index) => {
+        ordersDiv.innerHTML += `
+          <div style="background:#fafafa;padding:18px;border-radius:18px;margin-top:15px;border:1px solid #eee;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <strong>${order.type}</strong>
+              <span>${order.price}฿</span>
+            </div>
+
+            <p style="text-align:left;margin-top:10px;font-size:13px;word-break:break-all;">
+              <b>UID:</b> ${order.uid}<br><br>
+              <b>Link:</b><br>${order.link}<br><br>
+              <b>Slip:</b><br>
+              <a href="${order.slip}" target="_blank">ดูสลิป</a><br><br>
+              <b>เวลา:</b> ${order.time}
+            </p>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+              <span style="font-size:13px;padding:6px 12px;background:#eee;border-radius:999px;">
+                ${order.status}
+              </span>
+
+              <button onclick="completeOrder(${index})" style="width:auto;padding:10px 14px;margin-top:0;">
+                ส่งแล้ว
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function completeOrder(index) {
+      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      orders[index].status = 'ส่งสำเร็จ';
+      localStorage.setItem('orders', JSON.stringify(orders));
+      renderOrders();
+    }
+
+    renderOrders();
   </script>
 </body>
 </html>
