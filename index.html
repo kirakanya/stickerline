@@ -361,9 +361,9 @@ ${note}
     const encodedMessage =
       encodeURIComponent(message);
 
-    window.open(
-      `https://line.me/R/msg/text/?${encodedMessage}`
-    );
+    navigator.clipboard.writeText(message);
+alert("คัดลอกออเดอร์แล้ว กด OK แล้วนำไปวางส่งใน LINE ร้านได้เลย");
+window.open("https://line.me/R/ti/p/@674pbwid");
 
 });
 
