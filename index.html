@@ -5,39 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Destiny Sticker Store</title>
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
-      background: #f5f5f5;
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
       color: #222;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       padding: 20px;
     }
 
-    .container {
+    .page {
       width: 100%;
-      max-width: 480px;
-      background: white;
-      padding: 28px;
+      max-width: 980px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
       border-radius: 24px;
+      padding: 26px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.06);
     }
 
+    .full { grid-column: 1 / -1; }
+
+    h1, h2, h3 { margin: 0; }
+
     h1 {
+      font-size: 30px;
       text-align: center;
       margin-bottom: 8px;
-      font-size: 28px;
-      color: #111;
     }
 
-    p {
+    .subtitle {
       text-align: center;
       color: #777;
-      margin-bottom: 28px;
       font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .notice {
+      background: #f7f7f7;
+      border: 1px solid #eee;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 18px;
     }
 
     label {
@@ -45,28 +64,28 @@
       margin-top: 16px;
       margin-bottom: 8px;
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    input, select {
+    input, select, textarea {
       width: 100%;
       padding: 14px;
       border-radius: 14px;
       border: 1px solid #ddd;
       background: #fafafa;
-      box-sizing: border-box;
       font-size: 14px;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, textarea:focus {
       outline: none;
       border-color: #999;
       background: white;
     }
 
-    button {
+    button, .btn {
+      display: inline-block;
       width: 100%;
-      margin-top: 28px;
+      margin-top: 20px;
       padding: 15px;
       border: none;
       border-radius: 16px;
@@ -75,11 +94,13 @@
       font-size: 15px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
+      text-align: center;
+      text-decoration: none;
     }
 
-    button:hover {
-      opacity: 0.9;
+    .btn-light {
+      background: #f2f2f2;
+      color: #111;
     }
 
     .price-box {
@@ -88,9 +109,69 @@
       padding: 18px;
       border-radius: 16px;
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
     }
+
+    .qr-box {
+      text-align: center;
+      border: 1px dashed #ddd;
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 14px;
+      background: #fafafa;
+    }
+
+    .qr-box img {
+      width: 190px;
+      max-width: 100%;
+      border-radius: 12px;
+      background: white;
+      padding: 8px;
+    }
+
+    .order-card {
+      background: #fafafa;
+      padding: 18px;
+      border-radius: 18px;
+      margin-top: 15px;
+      border: 1px solid #eee;
+    }
+
+    .order-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .order-detail {
+      text-align: left;
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.7;
+      word-break: break-all;
+      color: #444;
+    }
+
+    .status {
+      font-size: 12px;
+      padding: 6px 12px;
+      background: #eee;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .status.done { background: #dff5e1; color: #1d7a35; }
+    .status.pending { background: #fff2cc; color: #8a6500; }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .row button { margin-top: 0; padding: 11px; font-size: 13px; }
 
     .footer {
       text-align: center;
@@ -99,83 +180,140 @@
       color: #999;
       line-height: 1.6;
     }
+
+    @media (max-width: 800px) {
+      .page { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Destiny Sticker Store</h1>
-    <p>ร้านรับกดสติ๊กเกอร์ไลน์ราคาถูก ส่งไว</p>
+  <div class="page">
+    <section class="card">
+      <h1>Destiny Sticker Store</h1>
+      <p class="subtitle">รับกดสติ๊กเกอร์ไลน์ / ธีมไลน์ ราคาประหยัด ส่งไว</p>
 
-    <form id="orderForm">
-      <label>เลือกประเภทสินค้า</label>
-      <select id="type" onchange="updatePrice()">
-        <option value="35">Sticker 50 Coins - 35฿</option>
-        <option value="59">Sticker 100 Coins - 59฿</option>
-        <option value="89">LINE Theme - 89฿</option>
-      </select>
-
-      <label>ลิงก์สติ๊กเกอร์ / ธีม</label>
-      <input type="text" id="link" placeholder="วางลิงก์ LINE STORE" required />
-
-      <label>UID หรือชื่อ LINE ลูกค้า</label>
-      <input type="text" id="uid" placeholder="กรอก UID หรือ @line" required />
-
-      <label>ลิงก์สลิป</label>
-      <input type="text" id="slip" placeholder="แนบลิงก์สลิป" required />
-
-      <div class="price-box">
-        ราคาทั้งหมด: <span id="price">35</span> บาท
+      <div class="notice">
+        วิธีสั่งซื้อ: เลือกสินค้า → วางลิงก์ LINE STORE → กรอก LINE ID/UID → โอนเงิน → กรอกลิงก์สลิป → ส่งออเดอร์
       </div>
 
-      <button type="submit">ส่งออเดอร์</button>
-    </form>
+      <form id="orderForm">
+        <label>เลือกประเภทสินค้า</label>
+        <select id="type" onchange="updatePrice()">
+          <option value="35" data-name="Sticker 50 Coins">Sticker 50 Coins - 35฿</option>
+          <option value="59" data-name="Sticker 100 Coins">Sticker 100 Coins - 59฿</option>
+          <option value="89" data-name="LINE Theme">LINE Theme - 89฿</option>
+        </select>
 
-    <div class="footer">
-      หลังชำระเงิน ร้านจะดำเนินการภายใน 5-15 นาที
-    </div>
+        <label>ลิงก์สติ๊กเกอร์ / ธีม</label>
+        <input type="url" id="link" placeholder="วางลิงก์ LINE STORE" required />
 
-    <hr style="margin:30px 0;border:none;border-top:1px solid #eee;">
+        <label>LINE ID / UID ลูกค้า</label>
+        <input type="text" id="uid" placeholder="เช่น @lineid หรือ UID" required />
 
-    <h2 style="font-size:22px;">📦 ระบบดูออเดอร์</h2>
+        <label>ชื่อผู้โอน</label>
+        <input type="text" id="payer" placeholder="ชื่อบนสลิปโอนเงิน" required />
 
-    <div id="orders"></div>
+        <label>ลิงก์สลิป</label>
+        <input type="url" id="slip" placeholder="อัปโหลดรูปสลิปแล้ววางลิงก์" required />
+
+        <label>หมายเหตุเพิ่มเติม</label>
+        <textarea id="note" rows="3" placeholder="เช่น ส่งเป็นของขวัญ / รีบใช้ / รายละเอียดอื่น ๆ"></textarea>
+
+        <div class="price-box">
+          ยอดชำระ: <span id="price">35</span> บาท
+        </div>
+
+        <button type="submit">ส่งออเดอร์</button>
+      </form>
+
+      <div class="footer">
+        หลังชำระเงิน ร้านจะดำเนินการภายใน 5-15 นาที<br>
+        หากกรอกข้อมูลผิด ร้านอาจติดต่อกลับผ่าน LINE
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>ชำระเงิน</h2>
+      <p class="subtitle" style="text-align:left;margin-top:8px;">โอนตามยอดที่แสดง แล้วแนบลิงก์สลิปในฟอร์ม</p>
+
+      <div class="qr-box">
+        <img id="qrImage" src="https://placehold.co/300x300?text=PromptPay+QR" alt="PromptPay QR">
+        <p style="font-size:13px;color:#777;margin-bottom:0;">
+          ใส่รูป QR พร้อมเพย์ของร้านแทนลิงก์นี้ในโค้ด<br>
+          หรือใส่เลขพร้อมเพย์ไว้ด้านล่าง
+        </p>
+      </div>
+
+      <label>พร้อมเพย์ / เลขบัญชีร้าน</label>
+      <input value="ใส่เบอร์พร้อมเพย์หรือเลขบัญชีร้านตรงนี้" readonly>
+
+      <a class="btn btn-light" href="https://line.me/R/ti/p/@YOUR_LINE_OA" target="_blank">ติดต่อร้านผ่าน LINE OA</a>
+    </section>
+
+    <section class="card full">
+      <h2>📦 ระบบดูออเดอร์หลังบ้าน</h2>
+      <p style="color:#777;font-size:13px;line-height:1.7;">
+        เวอร์ชันทดลองนี้เก็บออเดอร์ในเครื่อง/เบราว์เซอร์ที่เปิดเว็บอยู่ ถ้าต้องการให้ออเดอร์เข้า Google Sheet จริง ต้องนำฟอร์มนี้ไปเชื่อม Google Apps Script เพิ่ม
+      </p>
+
+      <div class="row">
+        <button class="btn-light" onclick="exportOrders()">ดาวน์โหลดออเดอร์ CSV</button>
+        <button class="btn-light" onclick="clearOrders()">ล้างออเดอร์ทั้งหมด</button>
+      </div>
+
+      <div id="orders"></div>
+    </section>
   </div>
 
   <script>
+    const form = document.getElementById('orderForm');
+
     function updatePrice() {
       const price = document.getElementById('type').value;
       document.getElementById('price').innerText = price;
     }
 
-    const form = document.getElementById('orderForm');
+    function getOrders() {
+      return JSON.parse(localStorage.getItem('orders')) || [];
+    }
+
+    function saveOrders(orders) {
+      localStorage.setItem('orders', JSON.stringify(orders));
+    }
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
+      const selected = document.getElementById('type');
+      const orderId = 'DS' + Date.now().toString().slice(-6);
+
       const order = {
-        type: document.getElementById('type').options[document.getElementById('type').selectedIndex].text,
+        id: orderId,
+        type: selected.options[selected.selectedIndex].dataset.name,
         price: document.getElementById('price').innerText,
         link: document.getElementById('link').value,
         uid: document.getElementById('uid').value,
+        payer: document.getElementById('payer').value,
         slip: document.getElementById('slip').value,
+        note: document.getElementById('note').value,
         status: 'รอดำเนินการ',
-        time: new Date().toLocaleString()
+        time: new Date().toLocaleString('th-TH')
       };
 
-      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const orders = getOrders();
       orders.unshift(order);
-      localStorage.setItem('orders', JSON.stringify(orders));
+      saveOrders(orders);
 
       renderOrders();
       form.reset();
       updatePrice();
 
-      alert('ส่งออเดอร์เรียบร้อย');
+      alert('ส่งออเดอร์เรียบร้อย เลขออเดอร์: ' + orderId);
     });
 
     function renderOrders() {
       const ordersDiv = document.getElementById('orders');
-      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const orders = getOrders();
 
       if (orders.length === 0) {
         ordersDiv.innerHTML = '<p style="text-align:center;color:#999;">ยังไม่มีออเดอร์</p>';
@@ -185,29 +323,32 @@
       ordersDiv.innerHTML = '';
 
       orders.forEach((order, index) => {
+        const isDone = order.status === 'ส่งสำเร็จ';
         ordersDiv.innerHTML += `
-          <div style="background:#fafafa;padding:18px;border-radius:18px;margin-top:15px;border:1px solid #eee;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <strong>${order.type}</strong>
-              <span>${order.price}฿</span>
+          <div class="order-card">
+            <div class="order-top">
+              <div>
+                <strong>${order.id}</strong><br>
+                <span style="font-size:13px;color:#777;">${order.type}</span>
+              </div>
+              <strong>${order.price}฿</strong>
             </div>
 
-            <p style="text-align:left;margin-top:10px;font-size:13px;word-break:break-all;">
-              <b>UID:</b> ${order.uid}<br><br>
-              <b>Link:</b><br>${order.link}<br><br>
-              <b>Slip:</b><br>
-              <a href="${order.slip}" target="_blank">ดูสลิป</a><br><br>
+            <div class="order-detail">
+              <b>LINE ID / UID:</b> ${order.uid}<br>
+              <b>ชื่อผู้โอน:</b> ${order.payer}<br>
+              <b>Link:</b> <a href="${order.link}" target="_blank">เปิดลิงก์สินค้า</a><br>
+              <b>Slip:</b> <a href="${order.slip}" target="_blank">ดูสลิป</a><br>
+              <b>หมายเหตุ:</b> ${order.note || '-'}<br>
               <b>เวลา:</b> ${order.time}
-            </p>
+            </div>
 
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
-              <span style="font-size:13px;padding:6px 12px;background:#eee;border-radius:999px;">
-                ${order.status}
-              </span>
-
-              <button onclick="completeOrder(${index})" style="width:auto;padding:10px 14px;margin-top:0;">
-                ส่งแล้ว
-              </button>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;">
+              <span class="status ${isDone ? 'done' : 'pending'}">${order.status}</span>
+              <div class="row" style="margin-top:0;">
+                <button onclick="copyOrder(${index})" class="btn-light">คัดลอก</button>
+                <button onclick="completeOrder(${index})">ส่งแล้ว</button>
+              </div>
             </div>
           </div>
         `;
@@ -215,10 +356,51 @@
     }
 
     function completeOrder(index) {
-      let orders = JSON.parse(localStorage.getItem('orders')) || [];
+      const orders = getOrders();
       orders[index].status = 'ส่งสำเร็จ';
-      localStorage.setItem('orders', JSON.stringify(orders));
+      saveOrders(orders);
       renderOrders();
+    }
+
+    function copyOrder(index) {
+      const order = getOrders()[index];
+      const text = `ออเดอร์ ${order.id}
+สินค้า: ${order.type}
+ราคา: ${order.price} บาท
+LINE ID/UID: ${order.uid}
+ลิงก์: ${order.link}
+สลิป: ${order.slip}
+หมายเหตุ: ${order.note || '-'}`;
+      navigator.clipboard.writeText(text);
+      alert('คัดลอกออเดอร์แล้ว');
+    }
+
+    function clearOrders() {
+      if (confirm('ต้องการล้างออเดอร์ทั้งหมดใช่ไหม?')) {
+        localStorage.removeItem('orders');
+        renderOrders();
+      }
+    }
+
+    function exportOrders() {
+      const orders = getOrders();
+      if (orders.length === 0) {
+        alert('ยังไม่มีออเดอร์ให้ดาวน์โหลด');
+        return;
+      }
+
+      const headers = ['Order ID','Type','Price','LINE ID/UID','Payer','Product Link','Slip','Note','Status','Time'];
+      const rows = orders.map(o => [o.id,o.type,o.price,o.uid,o.payer,o.link,o.slip,o.note,o.status,o.time]);
+      const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell || '').replaceAll('"','""')}"`).join(',')).join('
+');
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'destiny-orders.csv';
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     renderOrders();
